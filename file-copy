@@ -1,0 +1,43 @@
+# # Sử dụng một hình ảnh php
+# FROM php:7.3-apache
+
+# # Cài đặt các gói phụ thuộc cần thiết
+# RUN apt-get update && \
+#     apt-get install -y \
+#         git \
+#         unzip \
+#         libpng-dev \
+#         libjpeg-dev \
+#         libfreetype6-dev \
+#         locales \
+#         curl \
+#         libicu-dev \
+#         libpq-dev \
+#         libxml2-dev \
+#         libzip-dev \
+#         libonig-dev
+
+# # Cài đặt composer
+# RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+# # Cấu hình PHP
+# RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/
+# RUN docker-php-ext-install gd mbstring pdo pdo_mysql mysqli intl zip exif pcntl bcmath soap xmlrpc opcache
+
+# # Cấu hình Apache
+# RUN a2enmod rewrite
+
+# # Sao chép mã nguồn ứng dụng Laravel vào container
+# COPY . /var/www/html
+
+# # Đặt quyền truy cập cho thư mục lưu trữ
+# RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+
+# # Đặt thư mục làm việc
+# WORKDIR /var/www/html
+
+# # Cài đặt các gói phụ thuộc của ứng dụng Laravel
+# RUN composer install
+
+# # Đặt quyền truy cập cho các tệp tin
+# RUN chmod -R 755 /var/www/html/storage /var/www/html/bootstrap/cache
